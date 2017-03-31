@@ -7,11 +7,23 @@ def call(Map parameters = [:], body) {
         def installLatest = parameters.get('installLatest', false)
         def credentialsId = parameters.get('credentialsId', 'jenkinsgithub')
         def configFile = parameters.get('configFile', "${WORKSPACE}/fhcap.json")
+        def gitRepo = parameters.get('gitRepo', null)
+        def gitRef = parameters.get('gitRef', 'master')
 
         step([$class: 'WsCleanup'])
 
-        if(installLatest) {
-            sh "gem install fhcap-cli --no-ri --no-rdoc"
+        if(gitRepo) {
+            dir('fhcap-cli') {
+                checkoutGitRepo {
+                    repoUrl = gitRepo
+                    branch = gitRef
+                }
+                sh "rake install"
+            }
+        } else {
+            if(installLatest) {
+                sh "gem install fhcap-cli --no-ri --no-rdoc"
+            }
         }
         sh "fhcap --version"
 
