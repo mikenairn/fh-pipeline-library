@@ -4,6 +4,8 @@ def call(Map parameters = [:], body) {
 
     node('ruby-fhcap') {
 
+        env.RUBYOPT="-W0"
+
         def installLatest = parameters.get('installLatest', false)
         def credentialsId = parameters.get('credentialsId', 'jenkinsgithub')
         def configFile = parameters.get('configFile', "${WORKSPACE}/fhcap.json")
