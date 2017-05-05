@@ -12,6 +12,8 @@ def call(body) {
     def name = config.name
     def type = config.type
 
+    print config
+
     print "fhcapProviderAdd1"
     print config.credentials
 
