@@ -11,10 +11,21 @@ def call(body) {
 
     def name = config.name
     def type = config.type
+
+    print "fhcapProviderAdd1"
+    print config.credentials
+
     def credentials = config.credentials ?: [:]
     def providerConfig = config.providerConfig ?: [:]
 
+    print "fhcapProviderAdd2"
+    print credentials
+
     def credentialsStr = utils.mapToOptionsString(credentials)
+
+    print "fhcapProviderAdd3"
+    print credentials
+
     def providerConfigStr = utils.mapToOptionsString(providerConfig)
 
     def cmd = "fhcap provider add --name ${name} --type ${type} --credentials ${credentialsStr}"

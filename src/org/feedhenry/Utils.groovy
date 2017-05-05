@@ -22,6 +22,8 @@ def mapToOptionsString(map) {
     for (def o in mapToList(map)) {
         optionsArray << "${o[0]}:${o[1]}"
     }
+    print "mapToOptionsString"
+    print optionsArray
     optionsArray.join(" ")
 }
 
