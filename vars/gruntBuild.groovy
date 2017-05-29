@@ -13,5 +13,5 @@ def call(body) {
         cmd = distCmd
     }
 
-    archiveArtifacts "dist/${name}*.tar.gz"
+    archiveArtifacts "dist/${name}*.tar.gz, output/**/VERSION.txt"
 }
