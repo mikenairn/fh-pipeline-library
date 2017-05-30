@@ -5,7 +5,14 @@ import groovy.json.JsonSlurperClassic
 
 def call(name, versionTxt) {
     def buildInfoFileName = 'build-info.json'
-    def buildInfo = fileExists(buildInfoFileName) ? new JsonSlurperClassic().parseText(readFile(buildInfoFileName)) : [:]
+    def buildInfo = [:]
+
+    if(fileExists(buildInfoFileName)) {
+        def buildInfoRaw = readFile buildInfoFileName
+        print buildInfoRaw
+        buildInfo = new JsonSlurperClassic().parseText buildInfoRaw
+        print buildInfo
+    }
 
     buildInfo['jenkinsUrl'] = env.JENKINS_URL
     buildInfo['buildUrl'] = env.BUILD_URL
