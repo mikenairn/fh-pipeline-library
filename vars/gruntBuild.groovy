@@ -16,7 +16,7 @@ def call(body) {
     sh "cp output/**/VERSION.txt ."
     def versionTxt = readFile("VERSION.txt").trim()
 
-    writeBuildInfo(name, versionTxt)
+    def buildInfoFileName = writeBuildInfo(name, versionTxt)
 
     archiveArtifacts "dist/${name}*.tar.gz, ${buildInfoFileName}"
 }

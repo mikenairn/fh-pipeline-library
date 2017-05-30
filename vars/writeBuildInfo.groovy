@@ -15,4 +15,5 @@ def call(name, versionTxt) {
     buildInfo[name]['build'] = env.BUILD_NUMBER
 
     writeFile file: buildInfoFileName, text: new JsonBuilder(buildInfo).toPrettyString()
+    return buildInfoFileName
 }
