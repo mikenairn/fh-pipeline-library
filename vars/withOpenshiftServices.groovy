@@ -61,6 +61,9 @@ List<String> env(services, names) {
     if (services.contains('mysql')) {
         out.add("MYSQL_HOST=${names[services.indexOf('mysql')]}")
     }
+    if (services.contains('memcached')) {
+        out.add("MEMCACHED_HOST=${names[services.indexOf('memcached')]}")
+    }
     return out
 }
 
@@ -149,6 +152,48 @@ spec:
       - emptyDir: {}
         name: mysql-data
 """
+        case 'memcached':
+            return """
+apiVersion: v1
+kind: DeploymentConfig
+metadata:
+  name: ${name}
+  labels:
+    name: ${name}
+spec:
+  replicas: 0
+  selector:
+    name: ${name}
+  strategy:
+    recreateParams:
+      timeoutSeconds: 600
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        name: ${name}
+    spec:
+      containers:
+      - env:
+        - name: MYSQL_USER
+          value: mysql
+        - name: MYSQL_PASSWORD
+          value: password
+        - name: MYSQL_ROOT_PASSWORD
+          value: password
+        - name: MYSQL_DATABASE
+          value: sampledb
+        image: docker.io/rhmap/memcached
+        imagePullPolicy: IfNotPresent
+        name: ${name}
+        ports:
+        - containerPort: 11211
+          protocol: TCP
+        - containerPort: 11211
+          protocol: UDP
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+"""
         default:
         return ''
     }
@@ -186,6 +231,26 @@ spec:
   - port: 3306
     protocol: TCP
     targetPort: 3306
+  selector:
+    name: ${name}
+  type: ClusterIP
+"""
+        case 'memcached':
+            return """
+apiVersion: v1
+kind: Service
+metadata:
+  name: ${name}
+  labels:
+    name: ${name}
+spec:
+  ports:
+  - port: 11211
+    name: memcached-tcp
+    protocol: TCP
+  - port: 11211
+    name: memcached-udp
+    protocol: UDP
   selector:
     name: ${name}
   type: ClusterIP
