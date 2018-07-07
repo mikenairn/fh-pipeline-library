@@ -13,11 +13,13 @@ def call(body) {
     def type = config.type
     def credentials = config.credentials ?: [:]
     def providerConfig = config.providerConfig ?: [:]
+    def remoteQuery = config.remoteQuery ?: true
 
     def credentialsStr = utils.mapToOptionsString(credentials)
     def providerConfigStr = utils.mapToOptionsString(providerConfig)
 
     def cmd = "fhcap provider add --name ${name} --type ${type} --credentials ${credentialsStr}"
     cmd += providerConfigStr.trim() ? " --provider-config ${providerConfigStr.trim()}" : ''
+    cmd += " --remote-query ${remoteQuery}"
     sh cmd
 }
